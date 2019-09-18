@@ -14,7 +14,10 @@ const forwardingAddress = "http://165.22.42.206:3000"; // Replace this with your
 
 app.get('/shopify', (req, res) => {
     const shop = req.query.shop;
-    sendmail();
+    const name = req.query.name;
+    const email = req.query.email;
+    const sim = req.query.sim;
+    sendmail(name, email, sim);
     if (shop) {
       const state = nonce();
       const redirectUri = forwardingAddress + '/shopify/callback';
@@ -104,7 +107,7 @@ app.listen(3000, () => {
   console.log('Example app listening on port 3000!');
 });
 
-function sendmail() {
+function sendmail(name, email, sim) {
 
 let transporter = nodemailer.createTransport({
     sendmail: true,
@@ -114,8 +117,8 @@ let transporter = nodemailer.createTransport({
 transporter.sendMail({
     from: 'sim@republicwireless.com',
     to: 'ibis@softwarefactoryexperts.com',
-    subject: 'Message',
-    text: 'I hope this message gets delivered!'
+    subject: 'Sim Activation',
+    text: 'SIM: ' + sim + '\nNAME: ' + name + '\nEMAIL: ' + email
 }, (err, info) => {
     console.log(info.envelope);
     console.log(info.messageId);
