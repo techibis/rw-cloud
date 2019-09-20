@@ -28,7 +28,7 @@ app.get('/shopify', (req, res) => {
           if (sim) {
             const state = nonce();
             res.cookie('state', state);
-	    checksim(sim, res);
+	    checksim(name, email, sim, res);
           } else {
             return res.status(400).send('Missing parameter. Please add the appropriate parameters to your request');
           }
@@ -78,7 +78,7 @@ function sendmail(name, email, sim) {
 
 }
 
-function checksim(sim, res) {
+function checksim(name, email, sim, res) {
     var list = [];
     var read = fs.createReadStream('iccid_data_sim.csv')
     .pipe(split())
@@ -88,11 +88,11 @@ function checksim(sim, res) {
     .on('end', function(data){
        console.log('Read finished');
        console.log(list);
-       validateCsvRow(sim, list, res);
+       validateCsvRow(name, email, sim, list, res);
     })
 }
 
-function validateCsvRow(simNo, list, res) {
+function validateCsvRow(name, email, simNo, list, res) {
    let found = false;
    for (var i = 0; i < list.length; i++) {
 	console.log("comparing " + simNo + " and " + list[i]);
@@ -105,7 +105,7 @@ function validateCsvRow(simNo, list, res) {
    }
     console.log("found? " + found);
     if (found) {
-       sendmail(name, email, sim);
+       sendmail(name, email, simNo);
        return res.status(200).send('{"valid": "true"}');
     } else {
        return res.status(200).send('{"valid": "false"}');
