@@ -16,13 +16,14 @@ const split = require('split');
 const http = require('http');
 const https = require("https");
 
-app.get('/shopify', (req, res) => {
+app.post('/shopify', (req, res) => {
     const shop = req.query.shop;
     const name = req.query.name;
     const email = req.query.email;
     const sim = req.query.sim;
+console.log(shop);
     if (shop) {
-      if (shop != "republicwireless-test.myshopify.com") 
+      if (shop !="republicwireless-qa.myshopify.com") 
         return res.status(400).send('Invalid parameter. Please add the appropriate parameters to your request');
       else {
           if (sim) {
